@@ -11,6 +11,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -159,6 +160,17 @@ func TestContextHandlerName(t *testing.T) {
 
 func handlerNameTest(c *Context) {
 
+}
+
+var handlerTest HandlerFunc = func(c *Context) {
+
+}
+
+func TestContextHandler(t *testing.T) {
+	c, _, _ := CreateTestContext()
+	c.handlers = HandlersChain{func(c *Context) {}, handlerTest}
+
+	assert.Equal(t, reflect.ValueOf(handlerTest).Pointer(), reflect.ValueOf(c.Handler()).Pointer())
 }
 
 func TestContextQuery(t *testing.T) {
